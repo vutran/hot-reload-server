@@ -52,10 +52,9 @@ module.exports = function(webpackConfig, devMiddlewareConfig) {
         console.log('hot-reload-server running on http://%s:%s', webpackConfig.hotReloadServer.address, webpackConfig.hotReloadServer.port)
       })
     },
-    // retrieves the express app instance
-    get: function() {
-      return app
-    }
+    // expose the express module
+    express : express,
+    app : app
   }
 
 }
