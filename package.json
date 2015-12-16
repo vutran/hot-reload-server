@@ -1,0 +1,32 @@
+{
+  "name": "hot-reload-server",
+  "version": "0.0.1",
+  "description": "",
+  "main": "hot-reload-server.js",
+  "scripts": {
+    "test": "node example/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vutran/hot-reload-server.git"
+  },
+  "keywords": [
+    "hotreload",
+    "webpack",
+    "server",
+    "hot-reload",
+    "livereload"
+  ],
+  "author": "Vu Tran",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vutran/hot-reload-server/issues"
+  },
+  "homepage": "https://github.com/vutran/hot-reload-server#readme",
+  "devDependencies": {
+    "express": "^4.13.3",
+    "webpack": "^1.12.9",
+    "webpack-dev-middleware": "^1.4.0",
+    "webpack-hot-middleware": "^2.6.0"
+  }
+}
