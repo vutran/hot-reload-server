@@ -1,10 +1,12 @@
 # webpack hot-reload-server
 
-A simple webpack hot reload server using [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) and [webpack-hot-middleware](https://github.com/glenjamin/webpack-hot-middleware)
+Launch a simple hot reload server via Express, webpack-dev-middleware, and webpack-hot-middleware.
+
+[![NPM](https://nodei.co/npm/hot-reload-server.png?compact=true)](https://nodei.co/npm/hot-reload-server/)
 
 # Usage
 
-````
+````js
 // load the webpack config file
 const webpackConfig = require('./webpack.config')
 
