@@ -1,15 +1,19 @@
 'use strict';
 
 // Load dependencies
-const debug = require('debug')('hot-reload-server');
-const path = require('path');
-const express = require('express');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
+import debug from 'debug';
+import path from 'path';
+import express from 'express';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+
+// create a debugger
+let logger = debug('hot-reload-server');
+logger.log = console.log.bind(console);
 
 // Export the module
-module.exports = function(webpackConfig, devMiddlewareConfig) {
+export default function(webpackConfig, devMiddlewareConfig) {
 
   // Create the webpack compiler
   const webpackCompiler = webpack(webpackConfig);
@@ -17,8 +21,8 @@ module.exports = function(webpackConfig, devMiddlewareConfig) {
   // Create the hot reload server
   let app = express();
 
-  // Set the address/port
-  webpackConfig.hotReloadServer = Object.assign({}, {
+  // Set the configs
+  const configs = Object.assign({}, {
     address: 'localhost',
     port: 4000
   }, webpackConfig.hotReloadServer);
@@ -44,18 +48,21 @@ module.exports = function(webpackConfig, devMiddlewareConfig) {
 
   return {
     // starts the hot-reload-server
-    start: function() {
+    start: () => {
       // Listen to the port
-      let server = app.listen(webpackConfig.hotReloadServer.port, function(err, result) {
+      let server = app.listen(configs.port, (err, result) => {
         if (err) {
-          debug(err);
+          logger(err);
         }
-        debug('Running on http://%s:%s', webpackConfig.hotReloadServer.address, webpackConfig.hotReloadServer.port);
+        logger('Running on http://%s:%s', configs.address, configs.port);
       });
     },
+    // expose configs
+    configs,
     // expose the express module
-    express : express,
-    app : app
+    express,
+    // expose the express app
+    app
   };
 
 };

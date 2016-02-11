@@ -8,13 +8,13 @@ Launch a simple hot reload server via Express, webpack-dev-middleware, and webpa
 
 ````js
 // load the webpack config file
-const webpackConfig = require('./webpack.config')
+const webpackConfig = require('./webpack.config');
 
 // load the hot-reload-server module
-let hotReloadServer = require('../hot-reload-server')
+let hotReloadServer = require('../hot-reload-server');
 
 // create and start the server
 hotReloadServer(webpackConfig, {
   publicPath: '/dist'
-}).start()
+}).start();
 ````
