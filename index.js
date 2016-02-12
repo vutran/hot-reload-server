@@ -1,64 +1,66 @@
 'use strict';
 
 // Load dependencies
-import debug from 'debug';
 import path from 'path';
 import express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import config from './lib/config';
+const debug = require('debug');
 
 // create a debugger
-let logger = debug('hot-reload-server');
-logger.log = console.log.bind(console);
+let info = debug('hot-reload-server:info');
+info.log = console.log.bind(console);
 
-// Export the module
-export default function(webpackConfig, devMiddlewareConfig) {
+/**
+ * @param webpackConfig
+ * @param object devMiddlewareConfig          See options: https://github.com/webpack/webpack-dev-middleware
+ */
+export default function(webpackConfig, devMiddlewareConfig = {}) {
 
   // Create the webpack compiler
   const webpackCompiler = webpack(webpackConfig);
 
+  // Set the configs
+  const hrsConfigs = config.webpack(webpackConfig);
+
+  // Override webpack-dev-middleware configs
+  devMiddlewareConfig = config.devMiddleware(devMiddlewareConfig);
+
   // Create the hot reload server
   let app = express();
 
-  // Set the configs
-  const configs = Object.assign({}, {
-    address: 'localhost',
-    port: 4000
-  }, webpackConfig.hotReloadServer);
-
-  // Set the default webpack-dev-middleware configs
-  let defaults = {
-    noInfo: true,
-    watchOptions: {
-      aggregateTimeout: 1000,
-      poll: 1000
-    }
-  };
-
-  // Override webpack-dev-middleware configs
-  devMiddlewareConfig = Object.assign({}, defaults, devMiddlewareConfig);
-
   // Attach webpack-dev-middleware and webpack-hot-middleware
-  app.use(webpackDevMiddleware(webpackCompiler, devMiddlewareConfig));
+  app.use(webpackDevMiddleware(webpackCompiler, webpackConfig, devMiddlewareConfig));
   app.use(webpackHotMiddleware(webpackCompiler));
 
   // Create static directories
   app.use(path.basename(webpackConfig.output.path), express.static(webpackConfig.output.path));
 
   return {
-    // starts the hot-reload-server
+    /**
+     * Starts the hot-reload-server
+     */
     start: () => {
       // Listen to the port
-      let server = app.listen(configs.port, (err, result) => {
+      let server = app.listen(hrsConfigs.port, (err, result) => {
         if (err) {
-          logger(err);
+          info(err);
         }
-        logger('Running on http://%s:%s', configs.address, configs.port);
+        info('Running on http://%s:%s', hrsConfigs.address, hrsConfigs.port);
       });
     },
-    // expose configs
-    configs,
+    /**
+     * Exposes a public directory
+     *
+     * @param string directory
+     */
+    expose: (directory) => {
+      app.use(express.static(directory));
+    },
+    // expose hrsConfigs
+    hrsConfigs,
     // expose the express module
     express,
     // expose the express app
