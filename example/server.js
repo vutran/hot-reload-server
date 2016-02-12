@@ -1,9 +1,18 @@
-'use strict'
+'use strict';
 
-const webpackConfig = require('./webpack.config')
+// enable debugging
+process.env.DEBUG = '*';
+process.env.DEBUG_COLORS = 1;
 
-let hotReloadServer = require('../hot-reload-server')
+import path from 'path';
+import webpackConfig from './webpack.config';
+import hotReloadServer from '../index';
 
-hotReloadServer(webpackConfig, {
-  publicPath: '/dist'
-}).start()
+// create the server
+let server = hotReloadServer(webpackConfig);
+
+// expose the public directory
+server.expose(path.join(__dirname, 'public'));
+
+// start the server
+server.start();
