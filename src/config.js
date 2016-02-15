@@ -1,17 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var webpack = function webpack(config) {
+let webpack = (config) => {
 
   return Object.assign({}, {
     address: 'localhost',
     port: 4000
   }, config.hotReloadServer);
+
 };
 
-var devMiddleware = function devMiddleware(config, devConfig) {
+let devMiddleware = (config, devConfig) => {
 
   // Override configs
   return Object.assign({}, {
@@ -22,6 +20,7 @@ var devMiddleware = function devMiddleware(config, devConfig) {
       poll: 1000
     }
   }, devConfig);
+
 };
 
-exports.default = { webpack: webpack, devMiddleware: devMiddleware };
+export default { webpack, devMiddleware };

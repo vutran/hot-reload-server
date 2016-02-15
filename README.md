@@ -1,6 +1,6 @@
 # webpack hot-reload-server
 
-Launch a simple hot reload server via `express`, `webpack-dev-middleware`, and `webpack-hot-middleware`.
+Simple hot reload server.
 
 [![NPM](https://nodei.co/npm/hot-reload-server.png?compact=true)](https://nodei.co/npm/hot-reload-server/)
 
