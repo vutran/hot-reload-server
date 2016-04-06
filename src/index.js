@@ -1,4 +1,4 @@
-'use strict';
+/* eslint no-console: 0 */
 
 // Load dependencies
 import path from 'path';
@@ -10,15 +10,14 @@ import config from './config';
 const debug = require('debug');
 
 // create a debugger
-let info = debug('hot-reload-server:info');
+const info = debug('hot-reload-server:info');
 info.log = console.log.bind(console);
 
 /**
  * @param webpackConfig
  * @param object devMiddlewareConfig          See options: https://github.com/webpack/webpack-dev-middleware
  */
-export default function(webpackConfig, devMiddlewareConfig = {}) {
-
+export default function (webpackConfig, webpackDevMiddlewareConfig = {}) {
   // Create the webpack compiler
   const webpackCompiler = webpack(webpackConfig);
 
@@ -26,10 +25,10 @@ export default function(webpackConfig, devMiddlewareConfig = {}) {
   const hrsConfigs = config.webpack(webpackConfig);
 
   // Override webpack-dev-middleware configs
-  devMiddlewareConfig = config.devMiddleware(devMiddlewareConfig);
+  const devMiddlewareConfig = config.devMiddleware(webpackDevMiddlewareConfig);
 
   // Create the hot reload server
-  let app = express();
+  const app = express();
 
   // Attach webpack-dev-middleware and webpack-hot-middleware
   app.use(webpackDevMiddleware(webpackCompiler, webpackConfig, devMiddlewareConfig));
@@ -44,7 +43,7 @@ export default function(webpackConfig, devMiddlewareConfig = {}) {
      */
     start: () => {
       // Listen to the port
-      let server = app.listen(hrsConfigs.port, (err, result) => {
+      app.listen(hrsConfigs.port, err => {
         if (err) {
           info(err);
         }
@@ -64,7 +63,6 @@ export default function(webpackConfig, devMiddlewareConfig = {}) {
     // expose the express module
     express,
     // expose the express app
-    app
+    app,
   };
-
-};
+}
